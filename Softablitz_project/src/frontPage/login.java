@@ -7,17 +7,8 @@ package frontPage;
  */
 
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
 import static java.awt.image.ImageObserver.HEIGHT;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 
@@ -214,23 +205,40 @@ public class login extends javax.swing.JFrame {
 
           String uname = txtUsername.getText();
           String pass = String.valueOf(txtPassword.getPassword());
-         
-          try {
-            Socket socket = new Socket("localhost", 5436);
-            
-
-            Server s = new Server();
-            s.checkdblogin( uname, pass);
-            if(Server.checkl){
-                this.dispose();
-            }
-            } catch (IOException e) {
-                e.printStackTrace();
-//                  System.out.println("Client "+uname+" Disconnected!");
-            }
           
-       
-        
+          //String exp="[^#]";
+          
+          //if((Pattern.matches("'^#'",uname))&&(Pattern.matches("'^#'",pass)))
+          /*if((!uname.contains("#"))&&(!pass.contains("#")))
+          {
+               JOptionPane.showMessageDialog(null, "Username and Password should not contain '#' in it", "Login Failed!", HEIGHT);
+               return;
+          }*/
+          
+          String permission = new String();
+            
+          try{
+            Client c = new Client();
+            Client.main(null);
+            permission=c.LoginInfo(uname, pass);
+            
+            if(permission.equals("true"))
+            {
+                this.dispose();
+                Home_Screen hs = new Home_Screen(uname);
+                hs.setVisible(true);
+                hs.pack();
+                hs.setLocationRelativeTo(null);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Incorrect Username or Password", "Login Failed!", HEIGHT);
+            }
+          }catch(Exception e)
+          {
+              e.printStackTrace();
+          }
+                              
     }//GEN-LAST:event_loginActionPerformed
 
     private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
@@ -249,7 +257,7 @@ public class login extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         dispose();
-        NewUser nu = new NewUser();
+        Registration nu = new Registration();
         nu.setLocationRelativeTo(null);
         nu.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed

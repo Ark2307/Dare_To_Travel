@@ -5,25 +5,7 @@
  */
 package frontPage;
 
-//import com.mysql.jdbc.Connection;
-//import java.sql.Connection;
-//import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
-import java.sql.ResultSet;
-import com.mysql.jdbc.Statement;
-import java.io.IOException;
-import java.net.Socket;
-//import java.beans.Statement;
-//import com.mysql.jdbc.Statement;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-
-//import com.sun.jdi.connect.spi.Connection;
-
 
 /**
  *
@@ -31,12 +13,12 @@ import javax.swing.JOptionPane;
  */
 
 
-public class NewUser extends javax.swing.JFrame {
+public class Registration extends javax.swing.JFrame {
 
     /**
      * Creates new form NewUser
      */
-    public NewUser() {
+    public Registration() {
         initComponents();
     }
 
@@ -159,7 +141,7 @@ public class NewUser extends javax.swing.JFrame {
         });
 
         jLabel9.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel9.setText("Password Check");
+        jLabel9.setText("Confirm Password");
 
         passwordcheckPF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -287,8 +269,12 @@ public class NewUser extends javax.swing.JFrame {
         String password = String.valueOf(passwordPF.getPassword());
         String email = emailTF.getText();
         String contact = contactTF.getText();
-        String passwordck = String.valueOf(passwordcheckPF.getPassword());
+        String cnfPassword = String.valueOf(passwordcheckPF.getPassword());
         String gender = (String) genderCB.getSelectedItem();
+        
+        try{
+            Client c = new Client();
+            Client.main(null);
        
         if(firstname.equals("")){
             JOptionPane.showMessageDialog(null, "Enter Firstname!!");
@@ -302,7 +288,7 @@ public class NewUser extends javax.swing.JFrame {
         else if(password.equals("")){
             JOptionPane.showMessageDialog(null, "Empty Password!!");
         }
-        else if(!password.equals(passwordck)){
+        else if(!password.equals(cnfPassword)){
             JOptionPane.showMessageDialog(null, "Password did not match!!");
         }
         else if (!email.matches(EMAIL_PATTERN)) {
@@ -311,24 +297,52 @@ public class NewUser extends javax.swing.JFrame {
         else if (contact.equals("")) {
             JOptionPane.showMessageDialog(null, "Contact Field Empty!!");
         }
-        else if(checkUsername(username)){
-            JOptionPane.showMessageDialog(null, "this Username Already Exist");
+        else if((c.CheckInfo("username",username)).equals("true")){
+            JOptionPane.showMessageDialog(null, "This Username Already Exist");
         }
-        else if(checkEmail(email)){
-            JOptionPane.showMessageDialog(null, "this Email Id Already Exist");
+        else if((c.CheckInfo("email_id",email)).equals("true")){
+            JOptionPane.showMessageDialog(null, "This Email Id Already Exist");
         }
         else{
-            try {
-            Socket socket = new Socket("localhost", 5436);
-            Server s = new Server();
-            s.newuserreg(firstname, lastname, username, password, email, contact, passwordck, gender);
+                
+                String permission = new String();
+                
+                try
+            {
+                Thread.sleep(1000);
+            }catch(InterruptedException ex)
+            {
+                Thread.currentThread().interrupt();
+                ex.printStackTrace();
+            }
+        
+                
+            permission=c.RegInfo(firstname,lastname,username,password,email,contact,gender);
             
-            } catch (IOException e) {
-                  System.out.println("Client "+firstname +" Disconnected!");
-//                e.printStackTrace();
+            //permission=c.confirmation();
+            
+            //System.out.println("Login side "+permission);
+            
+            if(permission.equals("true"))
+            {
+                this.dispose();
+                Home_Screen hs = new Home_Screen(username);
+                hs.setVisible(true);
+                hs.pack();
+                hs.setLocationRelativeTo(null);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Error while Registration", "Registration Failed!", HEIGHT);
             }
             
-        }
+            }
+        
+        }catch(Exception e)
+          {
+              e.printStackTrace();
+          }
+        
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
@@ -363,52 +377,6 @@ public class NewUser extends javax.swing.JFrame {
         lg.setVisible(true);
     }//GEN-LAST:event_signinBtnActionPerformed
 
-    //function to check if the username already exists
-    public boolean checkUsername(String username){
-        PreparedStatement ps;
-        ResultSet rs;
-        boolean checkUser = false;
-        
-        String query = "SELECT * FROM `user_details` WHERE `username` =?";
-        try {
-            ps = (PreparedStatement) myConnection.getConnection().prepareStatement(query);
-            ps.setString(1, username);
-            
-            rs = ps.executeQuery();
-            
-            if(rs.next()){
-                checkUser = true;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(NewUser.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return checkUser;
-    }
-    
-    public boolean checkEmail(String email){
-        PreparedStatement ps;
-        ResultSet rs;
-        boolean checkemail = false;
-        
-        String query = "SELECT * FROM `user_details` WHERE `email_id` =?";
-        try {
-            ps = (PreparedStatement) myConnection.getConnection().prepareStatement(query);
-            ps.setString(1, email);
-            
-            rs = ps.executeQuery();
-            
-            if(rs.next()){
-                checkemail = true;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(NewUser.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return checkemail;
-    }
-    
-    
     /**
      * @param args the command line arguments
      */
@@ -426,20 +394,21 @@ public class NewUser extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NewUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NewUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NewUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NewUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NewUser().setVisible(true);
+                new Registration().setVisible(true);
             }
         });
     }

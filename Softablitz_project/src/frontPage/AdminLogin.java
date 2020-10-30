@@ -5,14 +5,9 @@
  */
 package frontPage;
 
-import com.mysql.jdbc.PreparedStatement;
+import java.awt.HeadlessException;
 import static java.awt.image.ImageObserver.HEIGHT;
 import java.io.IOException;
-import java.net.Socket;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -167,20 +162,35 @@ public class AdminLogin extends javax.swing.JFrame {
         String uname = adminuserTF.getText();
         String pass = String.valueOf(adminpassPF.getPassword());
         
-
-
-            try{
-                Socket socket = new Socket("localhost", 5436);
-                
-                Server s = new Server();
-                s.checkdbadmindlogin( uname, pass);
-                if(Server.checkl){
-                    this.dispose();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-//                  System.out.println("Admin "+uname+" Disconnected!");
+           String permission = new String();
+           permission = "false";
+           
+           try{
+            Client c = new Client();
+            Client.main(null);
+            permission=c.AdminInfo(uname, pass);
+            
+            //permission=c.confirmation();
+            
+            //System.out.println("Login side "+permission);
+            
+            if(permission.equals("true"))
+            {
+                this.dispose();
+                System.out.println("Admin "+uname+" active now");
+                AdminControl ac = new AdminControl(uname);
+                ac.setVisible(true);
+                ac.pack();
+                ac.setLocationRelativeTo(null);
             }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Incorrect Username or Password", "Login Failed!", HEIGHT);
+            }
+          }catch(HeadlessException | IOException e)
+          {
+              e.printStackTrace();
+          }
             
     }//GEN-LAST:event_jButton1ActionPerformed
 
