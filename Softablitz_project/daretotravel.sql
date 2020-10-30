@@ -2,10 +2,10 @@
 -- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3307
--- Generation Time: Oct 09, 2020 at 08:21 PM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.5
+-- Host: 127.0.0.1
+-- Generation Time: Oct 30, 2020 at 01:23 AM
+-- Server version: 10.4.14-MariaDB
+-- PHP Version: 7.2.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -56,7 +56,6 @@ CREATE TABLE `user_details` (
   `password` varchar(100) NOT NULL,
   `email_id` varchar(100) NOT NULL,
   `contact` varchar(100) NOT NULL,
-  `passwordch` varchar(100) NOT NULL,
   `Gender` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -64,25 +63,14 @@ CREATE TABLE `user_details` (
 -- Dumping data for table `user_details`
 --
 
-INSERT INTO `user_details` (`id`, `firstname`, `lastname`, `username`, `password`, `email_id`, `contact`, `passwordch`, `Gender`) VALUES
-(1, 'Abhinav', 'Anand', 'abhinav1001', 'helloworld', '10.abhinav.anand.01@gmail.com', '+91-1234567890', '', ''),
-(2, 'qwerty', 'keyboard', 'qwerty07', 'qwerty', 'qwerty101@gmail.com', '+91-92817381', '', ''),
-(3, 'MS', 'Dhoni', 'mahi07', 'cskislove', 'mahi07@gmail.com', '+91-7777777777', '', ''),
-(4, 'Indira', 'Nui', 'indirapepsico', 'qwerty', 'pepsico@pepsi.com', '+91-1234567', 'qwerty', 'null'),
-(5, 'Indira', 'Nui', 'indirapepsico', 'qwerty', 'pepsico@pepsi.com', '+91-1234567', 'qwerty', 'null'),
-(6, 'Selina', 'kayle', 'batwoman', 'imbatman', 'theftislove@dark.com', '+91-0101010', 'imbatman', 'Female'),
-(7, 'git', 'hub', 'gitrepo', 'gitbash', 'git@github.com', '+91-909090', 'gitbash', 'Male'),
-(8, 'qwerty', 'qwerty', 'qwerty08', 'qwerty', 'qwerty102@gmail.com', '091029289', 'qwerty', 'Male');
+INSERT INTO `user_details` (`id`, `firstname`, `lastname`, `username`, `password`, `email_id`, `contact`, `Gender`) VALUES
+(48, 'hardik', 'mittal', 'hearty', '1234', 'hm12@g.com', '888777999', 'Male'),
+(49, 'abhinav', 'anand', 'zaptain', '4321', 'aa@gm.com', '999888777', 'Male'),
+(50, 'aryan', 'khandelwal', 'coder', '1111', 'ay@gm.com', '777888999', 'Male');
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `admin_details`
---
-ALTER TABLE `admin_details`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `user_details`
@@ -95,16 +83,10 @@ ALTER TABLE `user_details`
 --
 
 --
--- AUTO_INCREMENT for table `admin_details`
---
-ALTER TABLE `admin_details`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
 -- AUTO_INCREMENT for table `user_details`
 --
 ALTER TABLE `user_details`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
