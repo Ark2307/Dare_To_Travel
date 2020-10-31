@@ -17,6 +17,8 @@ import java.util.StringTokenizer;
  *
  * @author Hardik
  */
+
+//Class to send and receive request for User
 public class Client {
     final static int ServerPort = 5436; 
     static String msg = new String();
@@ -25,8 +27,6 @@ public class Client {
   
     public static void main(String args[]) throws UnknownHostException, IOException  
     { 
-        //Scanner scn = new Scanner(System.in);
-        
         InetAddress ip = InetAddress.getByName("localhost");
         
         Socket s = new Socket(ip, ServerPort);
@@ -41,12 +41,14 @@ public class Client {
     
     String perm = "NA";
     
-    public String LoginInfo(String user, String pass)
+    //Method for Login Request
+    public String LoginInfo(String table, String user, String pass)
     {
         perm = "NA";
-        String mess="Login#"+user+"#"+pass+"#server";
+        String mess="Login#"+table+"#"+user+"#"+pass+"#server";
         msg=mess;
         
+        //Sending Information to Server
         Thread sendMessage = new Thread(new Runnable()  
         { 
             @Override
@@ -61,8 +63,8 @@ public class Client {
             }
         });
         sendMessage.start(); 
-    
-        
+            
+        //Receiving response of the request
         Thread readMessage = new Thread(new Runnable()  
         { 
             @Override
@@ -78,10 +80,7 @@ public class Client {
                         msgg=st.nextToken();
                         String permission=st.nextToken();
                         
-                        //confirmation(permission);
                         perm=permission;
-                        
-                        //System.out.println("this "+perm);
                         
                     } catch (IOException e) { 
                         System.out.println("Server is Offline/Down at this moment. Please try after some time. Thanks for Patience.");
@@ -92,7 +91,8 @@ public class Client {
             } 
         }); 
         readMessage.start();
-        //System.out.println("confirming "+permission);
+        
+        //If we do not get response from server then we pause the thread to give time to server for response
         if(perm.equals("NA"))
         {
             try
@@ -111,76 +111,7 @@ public class Client {
         }        
     }
     
-    public String AdminInfo(String user, String pass)
-    {
-        perm = "NA";
-        String mess="Admin#"+user+"#"+pass+"#server";
-        msg=mess;
-        
-        Thread sendMessage = new Thread(new Runnable()  
-        { 
-            @Override
-            public void run() {
-                
-                    try { 
-                        dost.writeUTF(msg); 
-                    } catch (IOException e) { 
-                        System.out.println("Error in Message!!!");
-                    }
-                
-            }
-        });
-        sendMessage.start(); 
-    
-        
-        Thread readMessage = new Thread(new Runnable()  
-        { 
-            @Override
-            public void run() { 
-                String msgg;
-                while (true) { 
-                    try { 
-                         
-                        msgg = dist.readUTF(); 
-                        System.out.println(msgg);
-                        StringTokenizer st = new StringTokenizer(msgg," : ");
-                        
-                        msgg=st.nextToken();
-                        String permission=st.nextToken();
-                        
-                        //confirmation(permission);
-                        perm=permission;
-                        
-                        //System.out.println("this "+perm);
-                        
-                    } catch (IOException e) { 
-                        System.out.println("Server is Offline/Down at this moment. Please try after some time. Thanks for Patience.");
-                        break;
-                    }
-                    
-                } 
-            } 
-        }); 
-        readMessage.start();
-        //System.out.println("confirming "+permission);
-        if(perm.equals("NA"))
-        {
-            try
-            {
-                Thread.sleep(1000);
-            }catch(InterruptedException ex)
-            {
-                Thread.currentThread().interrupt();
-                ex.printStackTrace();
-            }
-            return perm;
-        }
-        else
-        {
-            return perm;
-        }        
-    }
-    
+    //Method for Registration Request
     public String RegInfo(String fName, String lName, String user, String pass, String email, String contact, String gender)
     {
         perm = "NA";
@@ -202,6 +133,7 @@ public class Client {
         });
         sendMessage.start(); 
     
+        //Giving time to get response from server for email and username check
         try
         {
                 Thread.sleep(2000);
@@ -258,6 +190,7 @@ public class Client {
         }        
     }
     
+    //Method to check whether email or username is already registered or not
     public String CheckInfo(String variable, String value)
     {
         perm = "NA";

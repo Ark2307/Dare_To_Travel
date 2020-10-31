@@ -246,9 +246,6 @@ public class Registration extends javax.swing.JFrame {
     "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-
-    
-    
     public static void infoMessage(String message, String tittle){
         JOptionPane.showMessageDialog(null, message, tittle, JOptionPane.INFORMATION_MESSAGE);
     }
@@ -263,6 +260,8 @@ public class Registration extends javax.swing.JFrame {
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         // TODO add your handling code here:
+        
+        //Storing data input by the user in variables
         String firstname = firstnameTF.getText();
         String lastname = lastnameTF.getText();
         String username = usernameTF.getText();
@@ -272,10 +271,12 @@ public class Registration extends javax.swing.JFrame {
         String cnfPassword = String.valueOf(passwordcheckPF.getPassword());
         String gender = (String) genderCB.getSelectedItem();
         
+        //Initializing Client to send and receive response
         try{
             Client c = new Client();
             Client.main(null);
        
+        //Checking if any field is empty or not OR matching the pattern or not
         if(firstname.equals("")){
             JOptionPane.showMessageDialog(null, "Enter Firstname!!");
         }
@@ -306,22 +307,9 @@ public class Registration extends javax.swing.JFrame {
         else{
                 
                 String permission = new String();
-                
-                try
-            {
-                Thread.sleep(1000);
-            }catch(InterruptedException ex)
-            {
-                Thread.currentThread().interrupt();
-                ex.printStackTrace();
-            }
-        
-                
+              
+            //Passing information to Client to get response    
             permission=c.RegInfo(firstname,lastname,username,password,email,contact,gender);
-            
-            //permission=c.confirmation();
-            
-            //System.out.println("Login side "+permission);
             
             if(permission.equals("true"))
             {
@@ -407,6 +395,7 @@ public class Registration extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Registration().setVisible(true);
             }

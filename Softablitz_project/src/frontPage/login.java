@@ -7,8 +7,9 @@ package frontPage;
  */
 
 
+import java.awt.HeadlessException;
 import static java.awt.image.ImageObserver.HEIGHT;
-import java.util.regex.Pattern;
+import java.io.IOException;
 import javax.swing.JOptionPane;
 
 
@@ -203,24 +204,21 @@ public class login extends javax.swing.JFrame {
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
         // TODO add your handling code here:
 
+        //Storing data input by the user in variables
           String uname = txtUsername.getText();
           String pass = String.valueOf(txtPassword.getPassword());
-          
-          //String exp="[^#]";
-          
-          //if((Pattern.matches("'^#'",uname))&&(Pattern.matches("'^#'",pass)))
-          /*if((!uname.contains("#"))&&(!pass.contains("#")))
-          {
-               JOptionPane.showMessageDialog(null, "Username and Password should not contain '#' in it", "Login Failed!", HEIGHT);
-               return;
-          }*/
+          String table = "user_details";
           
           String permission = new String();
+          permission = "NA";
             
+          //Initialise Client to get response for request
           try{
             Client c = new Client();
             Client.main(null);
-            permission=c.LoginInfo(uname, pass);
+            
+            //Getting confirmation of user request
+            permission=c.LoginInfo(table,uname, pass);
             
             if(permission.equals("true"))
             {
@@ -234,7 +232,7 @@ public class login extends javax.swing.JFrame {
             {
                 JOptionPane.showMessageDialog(null, "Incorrect Username or Password", "Login Failed!", HEIGHT);
             }
-          }catch(Exception e)
+          }catch(HeadlessException | IOException e)
           {
               e.printStackTrace();
           }

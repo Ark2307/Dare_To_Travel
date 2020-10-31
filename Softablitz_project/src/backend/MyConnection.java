@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 public class MyConnection {
     public static Connection getConnection() throws SQLException{
         
+        //Defining Address of Database
         Connection con = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");

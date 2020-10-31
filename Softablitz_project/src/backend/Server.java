@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.ResultSet;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.sql.SQLException;
@@ -23,18 +22,21 @@ import java.sql.SQLException;
  * @author Hardik
  */
 public class Server {
-    static Vector<ClientHandler> ar = new Vector<>(); 
+    static Vector<ClientHandler> ar = new Vector<>(); //To store client connection details
     static int i = 0;
     
     public static void main(String[] args) throws IOException  
     { 
+        //Constructing Server Socket
         ServerSocket ss = new ServerSocket(5436); 
           
         Socket s; 
         
+        //Initialising ServerClient Class
         ServerClient sc = new ServerClient();
         ServerClient.main(null);
         
+        //Connecting to Clinet through Socket
         while (true)  
         {
             s = ss.accept(); 
@@ -46,6 +48,7 @@ public class Server {
               
             System.out.println("Creating a new handler for this client..."); 
   
+            //As we initialised ServerClient with server, ServerClient connection details will add into vector
             if(i==0)
             {
                 ClientHandler mtch = new ClientHandler(s,"server", dis, dos,sc);
@@ -58,6 +61,8 @@ public class Server {
                 
                 t.start();
             }
+            
+            //Adding Client details into vector
             else
             {
                 ClientHandler mtch = new ClientHandler(s,"client " + i, dis, dos,sc);
@@ -76,9 +81,10 @@ public class Server {
     } 
 }
 
+//ClientHandler to handle our connections
 class ClientHandler implements Runnable  
 { 
-    Scanner scn = new Scanner(System.in); 
+    
     private String name; 
     final DataInputStream dis; 
     final DataOutputStream dos; 
@@ -95,6 +101,7 @@ class ClientHandler implements Runnable
         this.isloggedin=true; 
     } 
     
+    //Receiving Messages and sending it to other mentioned client/serverclient through socket
     @Override
     public void run() { 
         String received; 
@@ -105,26 +112,25 @@ class ClientHandler implements Runnable
                 received = dis.readUTF(); 
                   
                 System.out.println(received); 
-                  
-                /*if(received.equals("logout")){ 
-                    this.isloggedin=false; 
-                    this.s.close(); 
-                    break; 
-                }*/
                 
                 StringTokenizer st = new StringTokenizer(received, "#"); 
                 String action = st.nextToken();
                 String sender = this.name;
+                
+                //If Login
                 if(action.equals("Login"))
                 {
+                    //Table to decide which table to call from database
+                    String table = st.nextToken();
                     String user = st.nextToken();
                     String pass = st.nextToken();                    
                     
+                    //SQL Injection
                     try{
                         PreparedStatement ps;
                         ResultSet rs;
                         
-                        String query = "SELECT * FROM `user_details` WHERE `username` =? AND `password` =?";
+                        String query = "SELECT * FROM `"+table+"` WHERE `username` =? AND `password` =?";
                         
                         try {
                             ps = (PreparedStatement) MyConnection.getConnection().prepareStatement(query);
@@ -136,14 +142,16 @@ class ClientHandler implements Runnable
                             
                             String permission;
                             
+                            //If username and password matches, we send true to user
                             if(rs.next()){
                                 permission="true#"+sender;
                             }
+                            //Else false
                             else{
                                 permission="false#"+sender;
                             }
                             
-                            //ServerClient sc = new ServerClient();
+                            //Sending to user via ServerClient
                             sc.confirmation(permission);
                             
                         }catch(SQLException se){
@@ -155,46 +163,7 @@ class ClientHandler implements Runnable
                     }
                 }
                 
-                else if(action.equals("Admin"))
-                {
-                    String user = st.nextToken();
-                    String pass = st.nextToken();                    
-                    
-                    try{
-                        PreparedStatement ps;
-                        ResultSet rs;
-                        
-                        String query = "SELECT * FROM `admin_details` WHERE `username` =? AND `password` =?";
-                        
-                        try {
-                            ps = (PreparedStatement) MyConnection.getConnection().prepareStatement(query);
-            
-                            ps.setString(1, user);
-                            ps.setString(2, pass);
-            
-                            rs = ps.executeQuery();
-                            
-                            String permission;
-                            
-                            if(rs.next()){
-                                permission="true#"+sender;
-                            }
-                            else{
-                                permission="false#"+sender;
-                            }
-                            
-                            //ServerClient sc = new ServerClient();
-                            sc.confirmation(permission);
-                            
-                        }catch(SQLException se){
-                            se.printStackTrace();
-                            System.out.println("Error while fetching data from Database. Please Check the Connection.");
-                        }
-                    }catch(Exception e){
-                        System.out.println("Can't fetch data from DataBase.");
-                    }
-                }
-                
+                //If for Registration, Mostly same as Login
                 else if(action.equals("Registration"))
                 {
                     String fName = st.nextToken();
@@ -215,6 +184,7 @@ class ClientHandler implements Runnable
                         
                         String permission;
                         
+                        //If data is stored successfully, then we get 1
                         if(x==1)
                         {
                             permission="true#"+sender;
@@ -232,6 +202,7 @@ class ClientHandler implements Runnable
                     }
                 }
                 
+                //To check if Username or Email ID is already registred or not
                 else if(action.equals("Check"))
                 {
                     String variable = st.nextToken();
@@ -259,7 +230,6 @@ class ClientHandler implements Runnable
                                 permission="false#"+sender;
                             }
                             
-                            //ServerClient sc = new ServerClient();
                             sc.confirmation(permission);
                             
                         }catch(SQLException se){
@@ -271,9 +241,9 @@ class ClientHandler implements Runnable
                     }
                 }
                 
-                //String MsgToSend = st.nextToken(); 
                 String recipient = st.nextToken();
                 
+                //Checking if Client is stored in the vector and is online
                 for (ClientHandler mc : Server.ar)  
                 {
                     if (mc.name.equals(recipient) && mc.isloggedin==true)  
@@ -294,9 +264,11 @@ class ClientHandler implements Runnable
                   finally{
                   break; 
                   }
-                //e.printStackTrace(); 
+                
             } 
         }
+        
+        //closing connection with client
         try
         { 
             this.dis.close(); 

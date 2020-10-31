@@ -159,20 +159,22 @@ public class AdminLogin extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
 
+        //Storing data input by user into variables
         String uname = adminuserTF.getText();
         String pass = String.valueOf(adminpassPF.getPassword());
+        String table = "admin_details";
         
+        //Variable to tell client whether his/her request is successful or not
            String permission = new String();
            permission = "false";
            
+           //Initializing Client to send and receive response
            try{
             Client c = new Client();
             Client.main(null);
-            permission=c.AdminInfo(uname, pass);
             
-            //permission=c.confirmation();
-            
-            //System.out.println("Login side "+permission);
+            //Method to get access to login
+            permission=c.LoginInfo(table,uname, pass);
             
             if(permission.equals("true"))
             {
@@ -235,6 +237,7 @@ public class AdminLogin extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new AdminLogin().setVisible(true);
             }

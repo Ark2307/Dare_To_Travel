@@ -15,14 +15,15 @@ import java.net.UnknownHostException;
  *
  * @author Hardik
  */
+
+//It acts as a messenger for Server
 public class ServerClient {
     final static int ServerPort = 5436;
     static DataOutputStream dost;
   
     public static void main(String args[]) throws UnknownHostException, IOException  
     { 
-        //Scanner scn = new Scanner(System.in);
-        
+        //Connecting Socket
         InetAddress ip = InetAddress.getByName("localhost");
         
         Socket s = new Socket(ip, ServerPort);
@@ -31,11 +32,12 @@ public class ServerClient {
         DataOutputStream dos = new DataOutputStream(s.getOutputStream()); 
         dost=dos;
         
+        //To send message
         Thread sendMessage = new Thread(new Runnable()  
         { 
             @Override
             public void run() {
-                //while (true) { 
+                
                     String msg = new String();
                     msg="Connected Successfully#server";
                     try { 
@@ -43,10 +45,11 @@ public class ServerClient {
                     } catch (IOException e) { 
                         System.out.println("Error!!!");
                     }
-                //}
+               
             }
         });
         
+        //To read message that are send to server (ServerClient)
         Thread readMessage = new Thread(new Runnable()  
         { 
             @Override
@@ -70,6 +73,7 @@ public class ServerClient {
         
     }
     
+    //Method to tell to client whether his/her request is successful or not
     public void confirmation(String msg)
     {
         
