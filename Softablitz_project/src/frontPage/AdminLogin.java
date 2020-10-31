@@ -8,6 +8,8 @@ package frontPage;
 import java.awt.HeadlessException;
 import static java.awt.image.ImageObserver.HEIGHT;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 /**
@@ -163,6 +165,17 @@ public class AdminLogin extends javax.swing.JFrame {
         String uname = adminuserTF.getText();
         String pass = String.valueOf(adminpassPF.getPassword());
         String table = "admin_details";
+        
+        String pattern = "([#])";
+        Pattern r = Pattern.compile(pattern);
+          
+          Matcher m = r.matcher(uname+pass);
+          
+          if(m.find())
+          {
+              JOptionPane.showMessageDialog(null, "Username or Password must not contain '#' in it", "Login Failed!", HEIGHT);
+              return;
+          }
         
         //Variable to tell client whether his/her request is successful or not
            String permission = new String();

@@ -10,6 +10,8 @@ package frontPage;
 import java.awt.HeadlessException;
 import static java.awt.image.ImageObserver.HEIGHT;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 
@@ -208,6 +210,17 @@ public class login extends javax.swing.JFrame {
           String uname = txtUsername.getText();
           String pass = String.valueOf(txtPassword.getPassword());
           String table = "user_details";
+          
+          String pattern = "([#])";
+          Pattern r = Pattern.compile(pattern);
+          
+          Matcher m = r.matcher(uname+pass);
+          
+          if(m.find())
+          {
+              JOptionPane.showMessageDialog(null, "Username or Password must not contain '#' in it", "Login Failed!", HEIGHT);
+              return;
+          }
           
           String permission = new String();
           permission = "NA";

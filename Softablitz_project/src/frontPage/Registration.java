@@ -5,6 +5,9 @@
  */
 package frontPage;
 
+import static java.awt.image.ImageObserver.HEIGHT;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 /**
@@ -270,6 +273,17 @@ public class Registration extends javax.swing.JFrame {
         String contact = contactTF.getText();
         String cnfPassword = String.valueOf(passwordcheckPF.getPassword());
         String gender = (String) genderCB.getSelectedItem();
+        
+        String pattern = "([#])";
+        Pattern r = Pattern.compile(pattern);
+          
+          Matcher m = r.matcher(firstname+lastname+username+password+email+contact+cnfPassword);
+          
+          if(m.find())
+          {
+              JOptionPane.showMessageDialog(null, "Any field must not contain '#' in it", "Registration Failed!", HEIGHT);
+              return;
+          }
         
         //Initializing Client to send and receive response
         try{
