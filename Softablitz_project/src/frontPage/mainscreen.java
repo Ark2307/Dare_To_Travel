@@ -9,12 +9,12 @@ package frontPage;
  *
  * @author ABHINAV ANAND
  */
-public class mainscreen extends javax.swing.JFrame {
+public class Mainscreen extends javax.swing.JFrame {
 
     /**
      * Creates new form mainscreen
      */
-    public mainscreen() {
+    public Mainscreen() {
         initComponents();
     }
 
@@ -116,7 +116,7 @@ public class mainscreen extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         //Initialse Login UI
-        login ul = new login();
+        Login ul = new Login();
         this.hide();
         ul.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -147,21 +147,22 @@ public class mainscreen extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(mainscreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Mainscreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(mainscreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Mainscreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(mainscreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Mainscreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(mainscreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Mainscreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new mainscreen().setVisible(true);
+                new Mainscreen().setVisible(true);
             }
         });
     }

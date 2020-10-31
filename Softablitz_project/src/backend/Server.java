@@ -5,6 +5,7 @@
  */
 package backend;
 
+import static backend.Convert.getSHA;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 import java.io.DataInputStream;
@@ -12,6 +13,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -123,7 +125,36 @@ class ClientHandler implements Runnable
                     //Table to decide which table to call from database
                     String table = st.nextToken();
                     String user = st.nextToken();
-                    String pass = st.nextToken();                    
+                    
+                    String passweak = st.nextToken();
+                    String pass = passweak;
+                    
+                    try{
+                        pass = Convert.toHexString(getSHA(passweak));
+                        System.out.println(pass);
+                    }catch(NoSuchAlgorithmException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    
+                    String permission = "false#"+sender;
+                    
+                    if(pass.equals(passweak))
+                    {
+                        permission="false#"+sender;
+                        String recipient = st.nextToken();
+                
+                //Checking if Client is stored in the vector and is online
+                for (ClientHandler mc : Server.ar)  
+                {
+                    if (mc.name.equals(recipient) && mc.isloggedin==true)  
+                    { 
+                        mc.dos.writeUTF(this.name+" : "+action); 
+                        break; 
+                    } 
+                }
+                        return;
+                    }
                     
                     //SQL Injection
                     try{
@@ -140,7 +171,7 @@ class ClientHandler implements Runnable
             
                             rs = ps.executeQuery();
                             
-                            String permission;
+                            //String permission;
                             
                             //If username and password matches, we send true to user
                             if(rs.next()){
@@ -169,10 +200,40 @@ class ClientHandler implements Runnable
                     String fName = st.nextToken();
                     String lName = st.nextToken();
                     String user = st.nextToken();
-                    String pass = st.nextToken(); 
+                    String passweak = st.nextToken(); 
                     String email = st.nextToken();
                     String contact = st.nextToken();
                     String gender = st.nextToken();
+                    
+                    //String passweak = st.nextToken();
+                    String pass = passweak;
+                    
+                    try{
+                        pass = Convert.toHexString(getSHA(passweak));
+                        System.out.println(pass);
+                    }catch(NoSuchAlgorithmException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    
+                    String permission = "false#"+sender;
+                    
+                    if(pass.equals(passweak))
+                    {
+                        permission="false#"+sender;
+                        String recipient = st.nextToken();
+                
+                //Checking if Client is stored in the vector and is online
+                for (ClientHandler mc : Server.ar)  
+                {
+                    if (mc.name.equals(recipient) && mc.isloggedin==true)  
+                    { 
+                        mc.dos.writeUTF(this.name+" : "+action); 
+                        break; 
+                    } 
+                }
+                        return;
+                    }
                     
                     try{
                         
@@ -182,7 +243,7 @@ class ClientHandler implements Runnable
                         
                         int x = stat.executeUpdate(query); 
                         
-                        String permission;
+                        //String permission;
                         
                         //If data is stored successfully, then we get 1
                         if(x==1)

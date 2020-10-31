@@ -149,7 +149,7 @@ public class Home_Screen extends javax.swing.JFrame {
     private void logoutBTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBTActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        mainscreen ms = new mainscreen();
+        Mainscreen ms = new Mainscreen();
         ms.setLocationRelativeTo(null);
         ms.setVisible(true);
     }//GEN-LAST:event_logoutBTActionPerformed

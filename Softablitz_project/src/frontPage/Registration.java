@@ -374,7 +374,7 @@ public class Registration extends javax.swing.JFrame {
     private void signinBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signinBtnActionPerformed
         // TODO add your handling code here:
         dispose();
-        login lg = new login();
+        Login lg = new Login();
         lg.setLocationRelativeTo(null);
         lg.setVisible(true);
     }//GEN-LAST:event_signinBtnActionPerformed
